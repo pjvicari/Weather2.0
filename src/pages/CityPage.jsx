@@ -14,15 +14,13 @@ import { getCountryNameByCountryCode } from '../Api/serviceCities'
 
 const CityPage = ({ data, actions }) => {
     const { allWeather, allDataChar, allForecastItemList } = data
-    const { onSetAllWeather, onSetDataChar, onSetForecastItemList } = actions
-    const { city, countryCode } = useCityPage(onSetDataChar, onSetForecastItemList, allDataChar, allForecastItemList)
+    const { city, countryCode } = useCityPage(actions, allDataChar, allForecastItemList)
     const cities = useMemo(() => ([{ city, countryCode }]), [city, countryCode])
-    useCityList(cities, allWeather, onSetAllWeather)
+    useCityList(cities, allWeather, actions)
     const cityCode = getCityCode(city, countryCode)
     const weather = allWeather[cityCode]
     const dataChar = allDataChar[cityCode]
     const forecastItemList = allForecastItemList[cityCode]
-    //debugger
     const state = weather && weather.state
     const temperature = weather && weather.temperature
 

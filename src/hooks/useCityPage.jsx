@@ -5,7 +5,7 @@ import getForecastByCity from '../Api/getForecastByCity'
 import { transformForecast, transformForecastItemList } from '../Api/transformForecast'
 import { getCityCode } from '../utils/utils'
 
-const useCityPage = (onSetDataChar, onSetForecastItemList, allDataChar, allForecastItemList) => {
+const useCityPage = (actions, allDataChar, allForecastItemList) => {
     const { city, countryCode } = useParams()
 
     useEffect(() => {
@@ -13,16 +13,16 @@ const useCityPage = (onSetDataChar, onSetForecastItemList, allDataChar, allForec
         const getForecast = async () => {
             try {
                 const { data } = await axios.get(getForecastByCity(city, countryCode))
-                onSetDataChar({ [cityCode]: transformForecast(data) })
-                onSetForecastItemList({ [cityCode]: transformForecastItemList(data) })
+                actions({ type: 'SET_CHART_DATA', payload: { [cityCode]: transformForecast(data) }})
+                actions({ type: 'SET_FORECAST_ITEM_LIST', payload: { [cityCode]: transformForecastItemList(data) }})
             } catch (error) {
                 console.log(error)
             }
         }
-        if(allDataChar && allForecastItemList && !allDataChar[cityCode] && !allForecastItemList[cityCode])
-        getForecast()
+        if (allDataChar && allForecastItemList && !allDataChar[cityCode] && !allForecastItemList[cityCode])
+            getForecast()
 
-    }, [city, countryCode, onSetDataChar, onSetForecastItemList, allDataChar, allForecastItemList])
+    }, [city, countryCode, actions, allDataChar, allForecastItemList])
     return { city, countryCode }
 }
 export default useCityPage
